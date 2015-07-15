@@ -1,0 +1,6 @@
+suites:
+  default:
+    namespace: GraphQL
+    psr4_prefix: GraphQL
+    src_path: lib
+formatter.name: pretty
