@@ -2,6 +2,7 @@
 
 namespace spec\GraphQL;
 
+use GraphQL\Lexer;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -12,32 +13,42 @@ class LexerSpec extends ObjectBehavior
         $this->shouldHaveType('GraphQL\Lexer');
     }
 
-    function it_should_be_able_to_parse_a_baisc_query()
+    function it_skips_whitespace()
     {
-        $query = "
-          query HeroNameQuery {
-            hero {
-              name
-            }
-          }
-        ";
-        $this->setInput($query);
-        $this->lookahead->shouldBe(null);
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('query');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('HeroNameQuery');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('{');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('hero');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('{');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('name');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('}');
-        $this->moveNext();
-        $this->lookahead['value']->shouldBe('}');
+        $this->setInput(<<<EOL
+
+        foo
+
+EOL
+        );
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::NAME);
+        $token->shouldHaveKeyWithValue('value', 'foo');
+        $token->shouldHaveKeyWithValue('position', 9);
+
+        $this->setInput(<<<EOL
+        #comment
+        foo#comment
+EOL
+        );
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::NAME);
+        $token->shouldHaveKeyWithValue('value', 'foo');
+        $token->shouldHaveKeyWithValue('position', 25);
+
+        $this->setInput(",,,foo,,,");
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::NAME);
+        $token->shouldHaveKeyWithValue('value', 'foo');
+        $token->shouldHaveKeyWithValue('position', 3);
+    }
+
+    function it_lexes_strings()
+    {
+        $this->setInput('"simple"');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::STRING);
+        $token->shouldHaveKeyWithValue('value', 'simple');
+        $token->shouldHaveKeyWithValue('position', 0);
     }
 }

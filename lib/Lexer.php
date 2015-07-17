@@ -52,7 +52,9 @@ final class Lexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return [
-            '[\w-]+'
+            '[\w-]+',
+            // String with quote
+            '"(?:""|[^"])*+"',
         ];
     }
 
@@ -63,9 +65,9 @@ final class Lexer extends AbstractLexer
     {
         return [
             // Skip whitespace
-            '\s+',
+            '[\s,]+',
             // Skip comments
-            '(\/\/|#)(.*)$'
+            '#.*'
         ];
     }
 
@@ -85,6 +87,13 @@ final class Lexer extends AbstractLexer
         if (is_numeric($value)) {
             return is_float($value) ? self::FLOAT : self::INT;
         }
+
+        if ($this->isString($value)) {
+            // Remove quotes
+            $value = substr($value, 1, -1);
+            return self::STRING;
+        }
+
         var_dump($value);
     }
 
@@ -94,7 +103,16 @@ final class Lexer extends AbstractLexer
      */
     protected function isName($text)
     {
-        return preg_match('/[_A-Za-z][_0-9A-Za-z]*/', $text);
+        return preg_match('/^[_A-Za-z][_0-9A-Za-z]*$/', $text);
+    }
+
+    /**
+     * @param $text
+     * @return boolean
+     */
+    protected function isString($text)
+    {
+        return ($text[0] === '"' && $text[strlen($text) - 1] === '"');
     }
 
 }
