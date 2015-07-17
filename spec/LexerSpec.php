@@ -180,4 +180,85 @@ EOL
         $token->shouldHaveKeyWithValue('value', -1.123e4567);
         $token->shouldHaveKeyWithValue('position', 0);
     }
+
+    function it_lexes_punctuation()
+    {
+        $this->setInput('!');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::BANG);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('$');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::DOLLAR);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('(');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::PAREN_L);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput(')');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::PAREN_R);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('...');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::SPREAD);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput(':');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::COLON);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('=');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::EQUALS);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('@');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::AT);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('[');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::BRACKET_L);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput(']');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::BRACKET_R);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('{');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::BRACE_L);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('|');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::PIPE);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('}');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::BRACE_R);
+        $token->shouldHaveKeyWithValue('value', null);
+        $token->shouldHaveKeyWithValue('position', 0);
+    }
 }

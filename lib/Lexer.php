@@ -79,7 +79,9 @@ final class Lexer extends AbstractLexer
     protected function getType(&$value)
     {
         if (isset($this->mapping[$value])) {
-            return $this->mapping[$value];
+            $type = $this->mapping[$value];
+            $value = null;
+            return $type;
         }
 
         if($this->isName($value)) {
