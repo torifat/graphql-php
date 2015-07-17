@@ -261,4 +261,21 @@ EOL
         $token->shouldHaveKeyWithValue('value', null);
         $token->shouldHaveKeyWithValue('position', 0);
     }
+
+    // TODO: Handle errors in Lexer
+    /*
+    function it_respects_whitespace_in_errors()
+    {
+        $this->setInput(<<<EOL
+
+        ?
+
+EOL
+        );
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::NAME);
+        $token->shouldHaveKeyWithValue('value', 'foo');
+        $token->shouldHaveKeyWithValue('position', 9);
+    }
+    */
 }

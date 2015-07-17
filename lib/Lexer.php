@@ -102,6 +102,8 @@ final class Lexer extends AbstractLexer
             $value = substr($value, 1, -1);
             return self::STRING;
         }
+
+        trigger_error("Unexpected character ${value}", E_WARNING);
     }
 
     /**
