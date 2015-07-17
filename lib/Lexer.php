@@ -54,7 +54,8 @@ final class Lexer extends AbstractLexer
         return [
             '[\w-]+',
             // String with quote
-            '"(?:""|[^"])*+"',
+            // '"(?:""|[^"])*+"',
+            '"(?:\\"|.)*"'
         ];
     }
 
@@ -89,6 +90,8 @@ final class Lexer extends AbstractLexer
         }
 
         if ($this->isString($value)) {
+            // Replace escape character
+            $value = str_replace('\"', '"', $value);
             // Remove quotes
             $value = substr($value, 1, -1);
             return self::STRING;

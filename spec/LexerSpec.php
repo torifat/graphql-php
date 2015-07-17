@@ -50,5 +50,17 @@ EOL
         $token->shouldHaveKeyWithValue('type', Lexer::STRING);
         $token->shouldHaveKeyWithValue('value', 'simple');
         $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('" white space "');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::STRING);
+        $token->shouldHaveKeyWithValue('value', ' white space ');
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('"quote \\""');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::STRING);
+        $token->shouldHaveKeyWithValue('value', 'quote "');
+        $token->shouldHaveKeyWithValue('position', 0);
     }
 }
