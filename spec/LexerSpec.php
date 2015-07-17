@@ -62,5 +62,122 @@ EOL
         $token->shouldHaveKeyWithValue('type', Lexer::STRING);
         $token->shouldHaveKeyWithValue('value', 'quote "');
         $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('"escaped \\n\\r\\b\\t\\f"');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::STRING);
+        $token->shouldHaveKeyWithValue('value', 'escaped \n\r\b\t\f');
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('"slashes \\\\ \\/"');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::STRING);
+        $token->shouldHaveKeyWithValue('value', 'slashes \\ \/');
+        $token->shouldHaveKeyWithValue('position', 0);
+    }
+
+    function it_lexes_numbers()
+    {
+        $this->setInput('4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::INT);
+        $token->shouldHaveKeyWithValue('value', 4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('4.123');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', 4.123);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::INT);
+        $token->shouldHaveKeyWithValue('value', -4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('9');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::INT);
+        $token->shouldHaveKeyWithValue('value', 9);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('0');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::INT);
+        $token->shouldHaveKeyWithValue('value', 0);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('00');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::INT);
+        $token->shouldHaveKeyWithValue('value', 0);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-4.123');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', -4.123);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('0.123');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', 0.123);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('123e4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', 123e4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('123E4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', 123E4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('123e-4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', 123e-4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('123e+4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', 123e4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-1.123e4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', -1.123e4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-1.123E4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', -1.123E4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-1.123e-4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', -1.123e-4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-1.123e+4');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', -1.123e+4);
+        $token->shouldHaveKeyWithValue('position', 0);
+
+        $this->setInput('-1.123e4567');
+        $token = $this->glimpse();
+        $token->shouldHaveKeyWithValue('type', Lexer::FLOAT);
+        $token->shouldHaveKeyWithValue('value', -1.123e4567);
+        $token->shouldHaveKeyWithValue('position', 0);
     }
 }

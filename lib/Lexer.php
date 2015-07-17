@@ -52,10 +52,11 @@ final class Lexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return [
-            '[\w-]+',
+            // Numbers
+            '(?:[+-]?[0-9]+(?:[\.][0-9]+)*)(?:[eE][+-]?[0-9]+)?',
             // String with quote
-            // '"(?:""|[^"])*+"',
-            '"(?:\\"|.)*"'
+            '"(?:\\"|.)*"',
+            '[\w-]+',
         ];
     }
 
@@ -86,18 +87,19 @@ final class Lexer extends AbstractLexer
         }
 
         if (is_numeric($value)) {
-            return is_float($value) ? self::FLOAT : self::INT;
+            $value = +$value;
+            return (is_float($value)) ? self::FLOAT : self::INT;
         }
 
         if ($this->isString($value)) {
             // Replace escape character
             $value = str_replace('\"', '"', $value);
+            // Replace escape character
+            $value = str_replace('\\\\', '\\', $value);
             // Remove quotes
             $value = substr($value, 1, -1);
             return self::STRING;
         }
-
-        var_dump($value);
     }
 
     /**
