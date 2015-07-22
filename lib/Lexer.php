@@ -93,14 +93,19 @@ final class Lexer extends AbstractLexer
             return (is_float($value)) ? self::FLOAT : self::INT;
         }
 
-        if ($this->isString($value)) {
-            // Replace escape character
-            $value = str_replace('\"', '"', $value);
-            // Replace escape character
-            $value = str_replace('\\\\', '\\', $value);
-            // Remove quotes
-            $value = substr($value, 1, -1);
-            return self::STRING;
+        if ($value[0] === '"') {
+            if ($this->isValidString($value)) {
+                // Replace escape character
+                $value = str_replace('\"', '"', $value);
+                // Replace escape character
+                $value = str_replace('\\\\', '\\', $value);
+                // Remove quotes
+                $value = substr($value, 1, -1);
+                return self::STRING;
+            }
+            else {
+                // TODO: Unterminated string exception
+            }
         }
 
         trigger_error("Unexpected character ${value}", E_WARNING);
@@ -119,7 +124,7 @@ final class Lexer extends AbstractLexer
      * @param $text
      * @return boolean
      */
-    protected function isString($text)
+    protected function isValidString($text)
     {
         return ($text[0] === '"' && $text[strlen($text) - 1] === '"');
     }

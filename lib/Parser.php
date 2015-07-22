@@ -2,33 +2,43 @@
 
 namespace GraphQL;
 
-use Doctrine\Common\Lexer\AbstractLexer;
-
-class Parser
+final class Parser
 {
     private $lexer;
 
     /**
      * Parser constructor.
-     * @param AbstractLexer $lexer
      */
-    public function __construct(AbstractLexer $lexer)
+    public function __construct()
     {
-        $this->lexer = $lexer;
+        $this->lexer = new Lexer;
     }
 
     public function parse($input)
     {
         $this->lexer->setInput($input);
-        $this->lexer->moveNext();
 
         $definitions = [];
-        while (null !== ($token = $this->lexer->lookahead))
-        {
-            $definitions[] = $token['value'];
-            $this->lexer->moveNext();
-        }
-
+        do {
+            if ($this->lexer->isNextToken(Lexer::BRACE_L)) {
+                // parseOperationDefinition
+            }
+            elseif ($this->lexer->isNextToken(Lexer::NAME)) {
+                if ($this->lexer->token['value'] === 'query' ||
+                    $this->lexer->token['value'] === 'mutation') {
+                    // parseOperationDefinition
+                }
+                elseif ($this->lexer->token['value'] === 'fragment') {
+                    // parseFragmentDefinition
+                }
+                else {
+                    // TODO: Unexpected lexed token
+                }
+            }
+            else {
+                // TODO: Unexpected lexed token
+            }
+        } while($this->lexer->moveNext());
         return $definitions;
     }
 }
